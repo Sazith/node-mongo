@@ -1,6 +1,11 @@
-const express = require('express')
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser')
 //link with home & office
 const app = express();
+app.use(cors())
+app.use(express.json());
+app.use(bodyParser.json())
 
 const users = [
   {
@@ -41,6 +46,8 @@ const users = [
   }
 ];
 
+//get
+
 app.get('/', (req, res) => {
   const fruit = {
     product: 'ada',
@@ -61,8 +68,11 @@ app.get('/user', (req, res) => {
 app.get('/user/:id', (req, res) => {
   const id = req.params.id;
   console.log(req.query.sort);
-  const name = users[id]
-  res.send({ id, name })
+  const name = users[id].name
+  const username = users[id].username
+  const email = users[id].email
+  res.send({ id, name,username,email })
+  // res.send(users[id])
 })
 
 
@@ -72,5 +82,17 @@ app.get('/user/:id', (req, res) => {
   const name = users[id]
   res.send({ id, name })
 })
+
+// post
+
+// add.post('/addUser', (req, res) => {
+//   console.log('Post req send');
+// }) 
+
+app.post('/addUser', (req, res) => {
+  const newUser = req.body;
+  users.push(newUser);
+  res.send({ message: 'User added', user: newUser });
+});
 
 app.listen(8000, () => console.log('listening to port 8000'))
